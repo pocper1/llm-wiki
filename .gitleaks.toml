@@ -11,4 +11,8 @@ paths = [
   '''(^|/)package-lock\.json$''',
   '''(^|/)quartz\.lock\.json$''',
   '''(^|/)quartz/\.quartz-cache/.*''',
+  # Vendored emoji code-point -> name data table (~15MB of plain text).
+  # Never hand-authored, no secrets possible, but its size alone made
+  # every gitleaks scan (pre-commit/pre-push/CI) take minutes longer.
+  '''(^|/)quartz/util/emojimap\.json$''',
 ]

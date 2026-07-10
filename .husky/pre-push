@@ -5,7 +5,7 @@ if ! command -v gitleaks >/dev/null 2>&1; then
   exit 1
 fi
 
-gitleaks detect --source . --redact --verbose --config .gitleaks.toml
+gitleaks detect --source . --redact --verbose --config .gitleaks.toml --log-opts="HEAD"
 if [ $? -ne 0 ]; then
   echo "gitleaks found a potential secret in git history. Push blocked."
   echo "If this is a false positive, add an allowlist entry to .gitleaks.toml."
