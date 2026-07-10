@@ -1,0 +1,14 @@
+title = "gitleaks config for llm-wiki"
+
+[extend]
+# Start from gitleaks' built-in ruleset (AWS keys, GitHub/GitLab tokens,
+# Slack tokens, private keys, generic high-entropy secrets, etc.)
+useDefault = true
+
+[allowlist]
+description = "Generated/lock files that are noisy for entropy-based rules but never hand-authored"
+paths = [
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)quartz\.lock\.json$''',
+  '''(^|/)quartz/\.quartz-cache/.*''',
+]

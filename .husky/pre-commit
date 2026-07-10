@@ -1,0 +1,15 @@
+echo "Scanning staged changes for secrets..."
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "gitleaks is not installed or not on PATH."
+  echo "Install it with: brew install gitleaks (see https://github.com/gitleaks/gitleaks#installing)"
+  exit 1
+fi
+
+gitleaks protect --staged --redact --verbose --config .gitleaks.toml
+if [ $? -ne 0 ]; then
+  echo "gitleaks found a potential secret in your staged changes. Commit blocked."
+  echo "If this is a false positive, add an allowlist entry to .gitleaks.toml."
+  exit 1
+fi
+
+npx lint-staged

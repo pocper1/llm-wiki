@@ -11,7 +11,6 @@ on:
 
 jobs:
   build-and-test:
-    if: ${{ github.repository == 'jackyzha0/quartz' }}
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
@@ -57,6 +56,21 @@ jobs:
 
       - name: Ensure Quartz builds, check bundle info
         run: npx quartz build --bundleInfo -d docs
+
+      - name: Build site content
+        if: matrix.os == 'ubuntu-latest'
+        run: npx quartz build
+
+      - name: Check for broken links
+        if: matrix.os == 'ubuntu-latest'
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # --offline: only validate links that resolve to files on disk.
+          # Skips remote URLs so the check isn't flaky on third-party outages/rate limits.
+          # --root-dir: Quartz emits root-relative URLs (e.g. /static/icon.png), so lychee
+          # needs to know they resolve against `public/`, not the filesystem root.
+          args: --offline --no-progress --root-dir "${{ github.workspace }}/public" './public/**/*.html'
+          fail: true
 
   publish-tag:
     if: ${{ github.repository == 'jackyzha0/quartz' && github.ref == 'refs/heads/v5' }}
